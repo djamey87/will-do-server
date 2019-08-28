@@ -28,7 +28,6 @@ const dbSetup = function() {
 
 			// create the doc
 			let newUser = new User(user);
-			newUser.setPassword(user.password);
 
 			await newUser.save();
 		});
