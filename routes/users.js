@@ -37,17 +37,15 @@ router.post('/', async function(req, res, next) {
 
 // login to system
 router.post('/login', passportStrategy, async (req, res, next) => {
-	console.log('users/login');
+	console.log('users/login', req.user);
 
 	try {
 		// returns user data after user logins in.
-		const userObject = req.user.toObject();
+		const user = req.user.toObject();
 
-		req.session.settings = {};
+		delete user.password;
 
-		delete userObject.password;
-
-		return res.json({ user: userObject, settings: req.session.settings, success: true });
+		return res.json({ user, success: true });
 	} catch (error) {
 		console.log('error: ', error);
 		return res.status(500).json({ msg: 'An error has occurred.' });
