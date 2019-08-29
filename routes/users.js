@@ -45,7 +45,9 @@ router.post('/login', passportStrategy, async (req, res, next) => {
 
 		delete user.password;
 
-		return res.json({ user, success: true });
+		req.session.settings = {};
+
+		return res.json({ user, settings: req.session.settings, success: true });
 	} catch (error) {
 		console.log('error: ', error);
 		return res.status(500).json({ msg: 'An error has occurred.' });
