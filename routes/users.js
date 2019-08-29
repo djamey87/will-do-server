@@ -73,4 +73,11 @@ router.get('/', authLib.required(), async function(req, res, next) {
 	return res.json({ users });
 });
 
+/* GET current user session */
+router.get('/currentSession', authLib.required(), async function(req, res, next) {
+	let user = req.user;
+	delete user.password;
+	return res.json({ user: req.user });
+});
+
 module.exports = router;
