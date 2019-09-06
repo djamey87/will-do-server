@@ -32,10 +32,11 @@ router.post('/', async function(req, res, next) {
 	}
 });
 
-/* GET task listings */
+/* GET task listings, newest first */
 router.get('/', authLib.required(), async function(req, res, next) {
 	const tasks = await Task.find()
 		.lean()
+		.sort({ createdAt: -1 })
 		.exec();
 
 	console.log('found tasks', tasks);
