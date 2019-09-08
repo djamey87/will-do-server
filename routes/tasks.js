@@ -34,13 +34,33 @@ router.post('/', async function(req, res, next) {
 
 /* GET task listings, newest first */
 router.get('/', authLib.required(), async function(req, res, next) {
-	const tasks = await Task.find()
+	const tasks = await Task.find({ status: { $ne: 'deleted' } })
 		.lean()
 		.sort({ createdAt: -1 })
 		.exec();
 
 	console.log('found tasks', tasks);
 	return res.json({ tasks: tasks });
+});
+
+/* DELETE task item -
+   this is a soft delete, preventing the item from returning in the general listings
+*/
+router.delete('/:id', authLib.required(), async function(req, res, next) {
+	console.log('gotta delete this', req.params.id);
+	const task = await Task.findOne({ _id: req.params.id }).exec();
+
+	// if none are found then error that shit
+	if (!task) {
+		return res.status(422).json({ msg: 'no task found mate' });
+	}
+
+	// else set the status to deleted
+	task.status = 'deleted';
+
+	await task.save();
+
+	return res.status(200).json({ success: true });
 });
 
 module.exports = router;
