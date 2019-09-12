@@ -12,7 +12,7 @@ basic routes:
 
 ### Setup
 
--   node v9.2.0
+-   node > v10.16.0
 -   redis-server > v2.4 (important to prevent KEY issues)
 -   mongodb > v3
 
