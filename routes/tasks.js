@@ -34,12 +34,19 @@ router.post('/', async function(req, res, next) {
 
 /* GET task listings, newest first */
 router.get('/', authLib.required(), async function(req, res, next) {
-	const tasks = await Task.find({ status: { $ne: 'deleted' } })
+	let query = {};
+
+	console.log('tasks query', req.query);
+
+	if (req.query.status) {
+		query.status = String(req.query.status).toLowerCase();
+	}
+
+	const tasks = await Task.find(query)
 		.lean()
 		.sort({ createdAt: -1 })
 		.exec();
 
-	console.log('found tasks', tasks);
 	return res.json({ tasks: tasks });
 });
 
