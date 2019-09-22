@@ -28,7 +28,7 @@ router.post('/', async function(req, res, next) {
 	try {
 		await user.save();
 
-		return res.json({ user });
+		return res.json({ success: true });
 	} catch (err) {
 		console.log('error saving user', err);
 		return res.status(422).json({ errors: err, msg: 'check fields' });
