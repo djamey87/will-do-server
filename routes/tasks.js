@@ -8,7 +8,7 @@ const Task = require('../models/Task');
 const passportStrategy = passport.authenticate('local');
 
 // create task
-router.post('/', async function(req, res, next) {
+router.post('/', authLib.required(), async function(req, res, next) {
 	const { title, content } = req.body;
 
 	// TODO: verify incoming meets model validation before proceeding
@@ -21,6 +21,7 @@ router.post('/', async function(req, res, next) {
 	// if no user exists, create away!
 	task.title = title;
 	task.content = content;
+	task.author = req.user._id;
 
 	try {
 		await task.save();
@@ -41,6 +42,9 @@ router.get('/', authLib.required(), async function(req, res, next) {
 	if (req.query.status) {
 		query.status = String(req.query.status).toLowerCase();
 	}
+
+	// only get tasks created by the logged in user
+	query.author = req.user._id;
 
 	const tasks = await Task.find(query)
 		.lean()
