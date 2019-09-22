@@ -8,7 +8,6 @@ basic routes:
 
 -   users
 -   tasks
--   intervals
 
 ### Setup
 
